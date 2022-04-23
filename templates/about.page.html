@@ -1,0 +1,13 @@
+{{ template "base" . }} {{ define "content" }}
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1>This is the about page</h1>
+      <p>This is description text</p>
+      <!-- index is a function that looks something that has an indices or has indices -->
+      <!-- in this case, index is looking for StringMap which . refers to all the data that is passed to the template and looking for index "test" -->
+      <p>This came from the template: {{index .StringMap "test"}}</p>
+    </div>
+  </div>
+</div>
+{{ end }}
