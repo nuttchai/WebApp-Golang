@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
+	"github.com/alexedwards/scs/v2"
 	"github.com/nuttchai/WebApp-Golang/pkg/config"
 	"github.com/nuttchai/WebApp-Golang/pkg/handlers"
 	"github.com/nuttchai/WebApp-Golang/pkg/render"
@@ -16,9 +18,23 @@ import (
 it's like the package.json file used in Node.js dependency management */
 const portNumber string = ":8080"
 
+// NOTE: If we put variables here, it will be available for entire "main" package
+var app config.AppConfig
+var session *scs.SessionManager
+
 // main is the main application function
 func main() {
-	var app config.AppConfig
+	// change this to true when we are in production
+	app.InProduction = false
+
+	session = scs.New()
+	session.Lifetime = 24 * time.Hour
+	session.Cookie.Persist = true                  // NOTE: should cookie stay available/persist after we close the browser?
+	session.Cookie.SameSite = http.SameSiteLaxMode // NOTE: it tells how strict what site that cookie applies to
+	session.Cookie.Secure = app.InProduction       // NOTE: set it to true, it will insist cookies need to be encrypted (in development mode, we use localhost:8080 which is not encrypted connection)
+
+	// NOTE: make it available everywhere
+	app.Session = session
 
 	tc, err := render.CreateTemplateCache()
 	if err != nil {

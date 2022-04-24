@@ -1,6 +1,11 @@
 package config
 
-import "html/template"
+import (
+	"html/template"
+	"log"
+
+	"github.com/alexedwards/scs/v2"
+)
 
 // NOTE: this package will ONLY be imported by other parts of the application
 
@@ -15,4 +20,7 @@ bacause if we try to make this package import another package that's from other 
 type AppConfig struct {
 	UseCache      bool
 	TemplateCache map[string]*template.Template
+	InfoLog       *log.Logger
+	InProduction  bool
+	Session       *scs.SessionManager
 }
