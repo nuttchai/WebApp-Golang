@@ -37,6 +37,9 @@ func NewHandlers(r *Repository) {
 // NOTE: Go convention for commenting: function name should appear at the beginning
 // Home is the home page handler
 func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
+	remoteIP := r.RemoteAddr
+	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
+
 	render.RenderTemplate(w, "home.page.html", &models.TemplateData{}) // TemplateData{} is how we intialize an empty TemplateData
 }
 
@@ -45,6 +48,10 @@ func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
 	// NOTE: Perform some logic
 	stringMap := make(map[string]string)
 	stringMap["test"] = "Hello, again."
+
+	// NOTE: remoteIP will be empty string if remote_ip is not found
+	remoteIP := m.App.Session.GetString(r.Context(), "remote_ip")
+	stringMap["remote_ip"] = remoteIP
 
 	// NOTE: Send the data to the template
 	render.RenderTemplate(w, "about.page.html", &models.TemplateData{
