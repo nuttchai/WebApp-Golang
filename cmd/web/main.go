@@ -32,13 +32,20 @@ func main() {
 	handlers.NewHandlers(repo)
 	render.NewTemplates(&app)
 
-	http.HandleFunc("/", handlers.Repo.Home)
-	http.HandleFunc("/about", handlers.Repo.About)
-
 	_, _ = fmt.Println(fmt.Sprintf("Starting application on port %s", portNumber))
 
-	/* NOTE:
+	/* NOTE Old Version:
 	ListenAndServe: listen HTTP with port and handler (nil)
 	It returns error, but we ignore it in this case by putting _ as variable */
-	_ = http.ListenAndServe(portNumber, nil)
+	// http.HandleFunc("/", handlers.Repo.Home)
+	// http.HandleFunc("/about", handlers.Repo.About)
+	// _ = http.ListenAndServe(portNumber, nil)
+
+	srv := &http.Server{
+		Addr:    portNumber,
+		Handler: routes(&app),
+	}
+
+	err = srv.ListenAndServe()
+	log.Fatal(err)
 }
