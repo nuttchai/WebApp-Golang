@@ -1,4 +1,4 @@
-module github.com/nuttchai/WebApp-Golang
+module github.com/nuttchai/go-webapp-starting-template
 
 go 1.18
 
